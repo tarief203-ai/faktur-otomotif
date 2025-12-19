@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +15,7 @@
             --orange-dark: #FF6F00;
             --orange-accent: #e65100;
             --white-clean: #ffffff;
+            --orange-soft: #fce4cc; /* Warna header tabel index */
         }
 
         body {
@@ -69,6 +70,7 @@
             padding: 20px;
         }
 
+        /* CSS Global Untuk Tabel dan Form */
         .card-header-orange {
             background-color: var(--orange-light) !important;
             color: white;
@@ -80,15 +82,34 @@
             border-color: var(--orange-accent) !important;
             color: white;
         }
-
-        .btn-icon-action {
-            width: 35px; height: 35px; display: inline-flex;
-            justify-content: center; align-items: center; border-radius: 4px;
+        
+        .btn-primary-orange:hover {
+            background-color: var(--orange-dark) !important;
+            color: white;
         }
 
+        /* Styling Header Tabel di Index */
         .table-orange-header th {
-            background-color: #fce4cc !important;
+            background-color: var(--orange-soft) !important;
             color: var(--orange-dark);
+            padding: 15px !important;
+        }
+
+        /* STYLING KHUSUS FORM VERTIKAL (TAMBAH/UBAH) */
+        .table-form th {
+            background-color: var(--orange-soft) !important;
+            color: var(--orange-accent);
+            width: 30%;
+            padding: 18px 20px !important;
+            border-right: 1px solid #dee2e6 !important;
+        }
+
+        .table-form td {
+            padding: 15px 20px !important;
+        }
+
+        .text-orange-accent {
+            color: var(--orange-accent) !important;
         }
     </style>
 </head>
@@ -110,11 +131,6 @@
             <a href="{{ url('/pembayaran') }}" class="list-group-item list-group-item-action {{ Request::is('pembayaran*') ? 'active' : '' }}">
                 <i class="fas fa-file-invoice-dollar me-2"></i> Pembayaran
             </a>
-            
-            <div class="mt-auto p-4">
-                <div class="small opacity-50">Logged in as:</div>
-                <div class="fw-bold text-white">The Vos Admin</div>
-            </div>
         </div>
     </div>
 
