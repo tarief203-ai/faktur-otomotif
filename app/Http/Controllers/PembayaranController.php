@@ -61,4 +61,14 @@ class PembayaranController extends Controller
 
     return view('pembayaran.cetak', compact('data'));
 }
+public function detail($id)
+{
+    $data = DB::table('pembayaran')->where('no_faktur', $id)->first();
+
+    if (!$data) {
+        return redirect('/pembayaran')->with('error', 'Data tidak ditemukan');
+    }
+
+    return view('pembayaran.detail', compact('data'));
+}
 }

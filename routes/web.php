@@ -29,3 +29,4 @@ Route::get('/pembayaran/delete/{id}', [PembayaranController::class, 'destroy']);
 Route::get('/pembayaran/create', [PembayaranController::class, 'create']);
 Route::post('/pembayaran/store', [PembayaranController::class, 'store']);
 Route::get('/pembayaran/cetak/{id}', [PembayaranController::class, 'cetak']);
+Route::get('/pembayaran/detail/{id}', [PembayaranController::class, 'detail']);
