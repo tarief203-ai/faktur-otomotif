@@ -11,3 +11,18 @@ Route::post('/pemilik/store', [PemilikController::class, 'store']);
 Route::get('/pemilik/edit/{id}', [PemilikController::class, 'edit']);
 Route::post('/pemilik/update/{id}', [PemilikController::class, 'update']);
 Route::get('/pemilik/delete/{id}', [PemilikController::class, 'destroy']);
+
+use App\Http\Controllers\KendaraanController;
+
+// Route Kendaraan
+Route::get('/kendaraan', [KendaraanController::class, 'index']);
+Route::get('/kendaraan/create', [KendaraanController::class, 'create']);
+Route::post('/kendaraan/store', [KendaraanController::class, 'store']);
+Route::get('/kendaraan/edit/{id}', [KendaraanController::class, 'edit']);
+Route::post('/kendaraan/update/{id}', [KendaraanController::class, 'update']);
+Route::get('/kendaraan/delete/{id}', [KendaraanController::class, 'destroy']);
+
+use App\Http\Controllers\PembayaranController;
+
+Route::get('/pembayaran', [PembayaranController::class, 'index']);
+Route::get('/pembayaran/delete/{id}', [PembayaranController::class, 'destroy']);
