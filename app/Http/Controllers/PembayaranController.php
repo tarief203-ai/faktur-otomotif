@@ -71,4 +71,28 @@ public function detail($id)
 
     return view('pembayaran.detail', compact('data'));
 }
+public function edit($id)
+{
+    // Ambil data pembayaran yang mau diedit
+    $data = DB::table('pembayaran')->where('no_faktur', $id)->first();
+    
+    // Ambil data untuk pilihan dropdown
+    $pemiliks = DB::table('pemilik')->get();
+    $kendaraans = DB::table('kendaraan')->get();
+
+    return view('pembayaran.edit', compact('data', 'pemiliks', 'kendaraans'));
+}
+
+public function update(Request $request, $id)
+{
+    DB::table('pembayaran')->where('no_faktur', $id)->update([
+        'id_pemilik'  => $request->id_pemilik,
+        'no_rangka'   => $request->no_rangka,
+        'jumlah_unit' => $request->jumlah_unit,
+        'harga'       => $request->harga,
+        // Tambahkan kolom lain jika ada seperti no_pupd, terbilang, dll
+    ]);
+
+    return redirect('/pembayaran')->with('success', 'Data Pembayaran berhasil diperbarui!');
+}
 }

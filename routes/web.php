@@ -30,3 +30,5 @@ Route::get('/pembayaran/create', [PembayaranController::class, 'create']);
 Route::post('/pembayaran/store', [PembayaranController::class, 'store']);
 Route::get('/pembayaran/cetak/{id}', [PembayaranController::class, 'cetak']);
 Route::get('/pembayaran/detail/{id}', [PembayaranController::class, 'detail']);
+Route::get('/pembayaran/edit/{id}', [PembayaranController::class, 'edit']);
+Route::post('/pembayaran/update/{id}', [PembayaranController::class, 'update']);
