@@ -23,9 +23,10 @@ Route::get('/logout', [AuthController::class, 'logout']);
 */
 Route::middleware([\App\Http\Middleware\CheckLogin::class])->group(function () {
 
-    // Halaman Utama & Dashboard
-    Route::get('/', function () { return view('dashboard'); });
-    Route::get('/dashboard', function () { return view('dashboard'); });
+   // Halaman Utama & Dashboard
+// Kita panggil DashboardController, bukan langsung view('dashboard')
+Route::get('/', [App\Http\Controllers\DashboardController::class, 'index']);
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index']);
 
     // --- Route Pemilik ---
     Route::prefix('pemilik')->group(function () {
@@ -54,7 +55,7 @@ Route::middleware([\App\Http\Middleware\CheckLogin::class])->group(function () {
         Route::post('/store', [PembayaranController::class, 'store']);
         Route::get('/edit/{id}', [PembayaranController::class, 'edit']);
         Route::post('/update/{id}', [PembayaranController::class, 'update']);
-        Route::get('/delete/{id}', [PembayaranController::class, 'destroy']);
+        Route::get('/delete/{id}', [PembayaranController::class, 'delete']);
         Route::get('/cetak/{id}', [PembayaranController::class, 'cetak']);
         Route::get('/detail/{id}', [PembayaranController::class, 'detail']);
     });

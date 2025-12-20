@@ -106,4 +106,27 @@ class PembayaranController extends Controller
 
         return view('pembayaran.detail', compact('data'));
     }
+    public function cetak($id)
+{
+    $data = DB::table('pembayaran')
+        ->join('kendaraan', 'pembayaran.no_rangka', '=', 'kendaraan.no_rangka')
+        ->join('pemilik', 'pembayaran.id_pemilik', '=', 'pemilik.id_pemilik')
+        ->select(
+            'pembayaran.*', 
+            'kendaraan.merk', 
+            'kendaraan.model', // Sesuai dengan database Anda
+            'kendaraan.warna', 
+            'kendaraan.no_mesin', 
+            'pemilik.nama', 
+            'pemilik.alamat'
+        )
+        ->where('pembayaran.no_faktur', $id)
+        ->first();
+
+    if (!$data) {
+        return redirect('/pembayaran')->with('error', 'Data tidak ditemukan!');
+    }
+
+    return view('pembayaran.cetak', compact('data'));
+}
 }
