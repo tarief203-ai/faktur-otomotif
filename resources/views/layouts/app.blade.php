@@ -98,7 +98,7 @@
             z-index: 1000;
         }
 
-        /* Efek Toggle Sidebar (Diberikan ke body via JS) */
+        /* Efek Toggle Sidebar */
         body.sb-toggled #sidebar-wrapper {
             margin-left: calc(-1 * var(--sidebar-width));
         }
@@ -107,7 +107,6 @@
         }
 
         .main-content { padding: 30px; }
-        .text-orange-accent { color: var(--orange-accent) !important; }
         
         .btn-toggle {
             color: white;
@@ -126,6 +125,7 @@
             padding: 5px 20px;
             border: none;
             transition: 0.3s;
+            text-decoration: none;
         }
         .btn-orange-pill:hover { background: var(--orange-soft); color: var(--orange-dark); }
     </style>
@@ -137,20 +137,20 @@
             <i class="fas fa-car-side me-2"></i>Prospect Motor
         </div>
         <div class="list-group list-group-flush mt-3">
-            <small class="px-4 text-white-50 text-uppercase mb-2" style="font-size: 0.65rem; font-weight: 700;">Menu Utama</small>
-            
             <a href="{{ url('/dashboard') }}" class="list-group-item list-group-item-action {{ Request::is('dashboard') ? 'active' : '' }}">
                 <i class="fas fa-tachometer-alt me-2"></i> Dashboard
             </a>
 
-            <a href="{{ url('/pemilik') }}" class="list-group-item list-group-item-action {{ Request::is('pemilik*') ? 'active' : '' }}">
-                <i class="fas fa-user-circle me-2"></i> Data Pemilik
-            </a>
-            
-            <a href="{{ url('/kendaraan') }}" class="list-group-item list-group-item-action {{ Request::is('kendaraan*') ? 'active' : '' }}">
-                <i class="fas fa-car me-2"></i> Data Kendaraan
-            </a>
-            
+            @if(auth()->check() && auth()->user()->role == 'admin')
+                <a href="{{ url('/pemilik') }}" class="list-group-item list-group-item-action {{ Request::is('pemilik*') ? 'active' : '' }}">
+                    <i class="fas fa-user-circle me-2"></i> Data Pemilik
+                </a>
+                
+                <a href="{{ url('/kendaraan') }}" class="list-group-item list-group-item-action {{ Request::is('kendaraan*') ? 'active' : '' }}">
+                    <i class="fas fa-car me-2"></i> Data Kendaraan
+                </a>
+            @endif
+
             <a href="{{ url('/pembayaran') }}" class="list-group-item list-group-item-action {{ Request::is('pembayaran*') ? 'active' : '' }}">
                 <i class="fas fa-file-invoice-dollar me-2"></i> Pembayaran
             </a>
@@ -158,7 +158,6 @@
     </div>
 
     <div id="page-content-wrapper">
-        
         <nav class="navbar navbar-dark navbar-custom">
             <div class="container-fluid p-0">
                 <div class="d-flex align-items-center">
@@ -168,7 +167,15 @@
                     <span class="text-white fw-bold d-none d-md-inline ms-2">SISTEM INFORMASI PROSPECT MOTOR</span>
                 </div>
                 
-                <div class="ms-auto">
+                <div class="ms-auto d-flex align-items-center">
+                    @if(auth()->check())
+                        <div class="text-white me-3 d-none d-lg-block text-end">
+                            <span class="fw-bold" style="font-size: 14px;">{{ auth()->user()->name }}</span>
+                            <br>
+                            <small class="opacity-75" style="font-size: 10px;">{{ strtoupper(auth()->user()->role) }}</small>
+                        </div>
+                    @endif
+
                     <a href="{{ url('/logout') }}" class="btn btn-orange-pill shadow-sm" onclick="return confirm('Apakah Anda ingin keluar?')">
                         Keluar <i class="fas fa-sign-out-alt ms-1"></i>
                     </a>
@@ -188,7 +195,7 @@
     
     <script>
         $(document).ready(function () {
-            // Script untuk Toggle Sidebar
+            // Sidebar Toggle
             $("#sidebarToggle").click(function(e) {
                 e.preventDefault();
                 $("body").toggleClass("sb-toggled");

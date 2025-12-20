@@ -7,70 +7,48 @@ use Illuminate\Support\Facades\DB;
 
 class PembayaranController extends Controller
 {
-    public function index() 
-    {
-        // Join tabel untuk mendapatkan Nama Pemilik dan Merk Kendaraan
-        $pembayarans = DB::table('pembayaran')
-            ->join('pemilik', 'pembayaran.id_pemilik', '=', 'pemilik.id_pemilik')
-            ->join('kendaraan', 'pembayaran.no_rangka', '=', 'kendaraan.no_rangka')
-            ->select(
-                'pembayaran.*', 
-                'pemilik.nama', 
-                'kendaraan.merk'
-            )
-            ->get();
-
-        return view('pembayaran.index', compact('pembayarans'));
+public function index()
+{
+    if (!auth()->check()) {
+        return redirect('/login');
     }
 
-    public function create() 
-    {
-        $pemiliks = DB::table('pemilik')->get();
-        $kendaraans = DB::table('kendaraan')->get();
-        
-        return view('pembayaran.create', compact('pemiliks', 'kendaraans'));
+    $user = auth()->user();
+
+    $query = \Illuminate\Support\Facades\DB::table('pembayaran')
+        ->join('pemilik', 'pembayaran.id_pemilik', '=', 'pemilik.id_pemilik')
+        ->join('kendaraan', 'pembayaran.no_rangka', '=', 'kendaraan.no_rangka')
+        // Ganti 'pemilik.nama_pemilik' menjadi 'pemilik.nama' (sesuai tabel Anda)
+        ->select('pembayaran.*', 'pemilik.nama', 'kendaraan.merk');
+
+    if ($user->role == 'staff') {
+        $query->where('pembayaran.user_id', $user->id);
     }
 
-    public function store(Request $request) 
-    {
-        $request->validate([
-            'no_faktur' => 'required',
-            'no_rangka' => 'required',
-            'id_pemilik' => 'required',
-            'harga' => 'required|numeric'
-        ]);
+    $pembayarans = $query->get();
 
-        DB::table('pembayaran')->insert([
-            'no_faktur'      => $request->no_faktur,
-            'no_pupd'        => $request->no_pupd,
-            'tgl_pupd'       => $request->tgl_pupd,
-            'harga'          => $request->harga,
-            'terbilang'      => $request->terbilang,
-            'tgl_pembayaran' => $request->tgl_pembayaran,
-            'jumlah_unit'    => $request->jumlah_unit,
-            'id_pemilik'     => $request->id_pemilik,
-            'no_rangka'      => $request->no_rangka,
-        ]);
-
-        return redirect('/pembayaran')->with('success', 'Pembayaran berhasil disimpan!');
-    }
+    return view('pembayaran.index', compact('pembayarans'));
+}
 
     // --- FUNGSI EDIT (MENAMPILKAN FORM) ---
     public function edit($id)
-    {
-        // Ambil data pembayaran berdasarkan no_faktur
-        $data = DB::table('pembayaran')->where('no_faktur', $id)->first();
-        
-        // Ambil data dropdown
-        $pemiliks = DB::table('pemilik')->get();
-        $kendaraans = DB::table('kendaraan')->get();
+{
+    $data = DB::table('pembayaran')->where('no_faktur', $id)->first();
 
-        if (!$data) {
-            return redirect('/pembayaran')->with('error', 'Data tidak ditemukan!');
-        }
-
-        return view('pembayaran.edit', compact('data', 'pemiliks', 'kendaraans'));
+    if (!$data) {
+        return redirect('/pembayaran')->with('error', 'Data tidak ditemukan!');
     }
+
+    // CEK OTORISASI: Jika dia Staff dan bukan miliknya, usir!
+    if (auth()->user()->role == 'staff' && $data->user_id != auth()->id()) {
+        return redirect('/pembayaran')->with('error', 'Anda tidak diizinkan mengubah data orang lain!');
+    }
+
+    $pemiliks = DB::table('pemilik')->get();
+    $kendaraans = DB::table('kendaraan')->get();
+
+    return view('pembayaran.edit', compact('data', 'pemiliks', 'kendaraans'));
+}
 
     // --- FUNGSI UPDATE (SIMPAN PERUBAHAN) ---
     public function update(Request $request, $id)

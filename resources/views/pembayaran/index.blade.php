@@ -19,9 +19,12 @@
             </h5>
         </div>
         <div class="card-body">
+            {{-- Tombol TAMBAH: Hanya muncul jika Role adalah ADMIN --}}
+            @if(auth()->user()->role == 'admin')
             <a href="{{ url('/pembayaran/create') }}" class="btn btn-primary-orange mb-3 fw-bold text-white px-4 shadow-sm">
                 <i class="fas fa-plus-circle me-1"></i> Tambah Pembayaran
             </a>
+            @endif
             
             <div class="table-responsive">
                 <table class="table table-hover table-bordered datatable-init align-middle">
@@ -33,7 +36,12 @@
                             <th class="text-orange-accent">Merk</th>
                             <th class="text-orange-accent">Unit</th>
                             <th class="text-orange-accent">Harga</th>
-                            <th class="text-orange-accent">Aksi</th>
+                            
+                            {{-- Kolom AKSI: Hanya muncul jika Role adalah ADMIN --}}
+                            @if(auth()->user()->role == 'admin')
+                                <th class="text-orange-accent">Aksi</th>
+                            @endif
+
                             <th class="text-orange-accent">Keterangan</th>
                         </tr>
                     </thead>
@@ -51,6 +59,8 @@
                             </td>
                             <td class="text-end fw-bold">Rp {{ number_format($data->harga, 0, ',', '.') }}</td>
                             
+                            {{-- Tombol EDIT & DELETE: Hanya untuk ADMIN --}}
+                            @if(auth()->user()->role == 'admin')
                             <td class="text-center">
                                 <div class="btn-group shadow-sm">
                                     <a href="{{ url('/pembayaran/edit/'.$data->no_faktur) }}" class="btn btn-sm btn-warning text-white" title="Edit">
@@ -61,7 +71,9 @@
                                     </a>
                                 </div>
                             </td>
+                            @endif
 
+                            {{-- Tombol DETAIL & CETAK: Muncul untuk ADMIN maupun STAFF --}}
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-1">
                                     <a href="{{ url('/pembayaran/detail/'.$data->no_faktur) }}" class="btn btn-sm btn-info text-white shadow-sm">
@@ -82,7 +94,6 @@
 </div>
 
 <style>
-    /* Styling agar seragam dengan menu Pemilik & Kendaraan */
     .bg-orange-dark { background-color: #FF6F00 !important; }
     .bg-orange-soft { background-color: #fef4ea !important; }
     .bg-orange-accent { background-color: #e65100 !important; }
