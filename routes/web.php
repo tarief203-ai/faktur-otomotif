@@ -1,34 +1,62 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PemilikController;
-
-// Halaman Utama & Tambah
-Route::get('/pemilik', [PemilikController::class, 'index']);
-Route::get('/pemilik/create', [PemilikController::class, 'create']);
-Route::post('/pemilik/store', [PemilikController::class, 'store']);
-
-// Ubah & Hapus
-Route::get('/pemilik/edit/{id}', [PemilikController::class, 'edit']);
-Route::post('/pemilik/update/{id}', [PemilikController::class, 'update']);
-Route::get('/pemilik/delete/{id}', [PemilikController::class, 'destroy']);
-
 use App\Http\Controllers\KendaraanController;
-
-// Route Kendaraan
-Route::get('/kendaraan', [KendaraanController::class, 'index']);
-Route::get('/kendaraan/create', [KendaraanController::class, 'create']);
-Route::post('/kendaraan/store', [KendaraanController::class, 'store']);
-Route::get('/kendaraan/edit/{id}', [KendaraanController::class, 'edit']);
-Route::post('/kendaraan/update/{id}', [KendaraanController::class, 'update']);
-Route::get('/kendaraan/delete/{id}', [KendaraanController::class, 'destroy']);
-
 use App\Http\Controllers\PembayaranController;
 
-Route::get('/pembayaran', [PembayaranController::class, 'index']);
-Route::get('/pembayaran/delete/{id}', [PembayaranController::class, 'destroy']);
-Route::get('/pembayaran/create', [PembayaranController::class, 'create']);
-Route::post('/pembayaran/store', [PembayaranController::class, 'store']);
-Route::get('/pembayaran/cetak/{id}', [PembayaranController::class, 'cetak']);
-Route::get('/pembayaran/detail/{id}', [PembayaranController::class, 'detail']);
-Route::get('/pembayaran/edit/{id}', [PembayaranController::class, 'edit']);
-Route::post('/pembayaran/update/{id}', [PembayaranController::class, 'update']);
+/*
+|--------------------------------------------------------------------------
+| Authentikasi (Login & Logout)
+|--------------------------------------------------------------------------
+*/
+Route::get('/login', [AuthController::class, 'index'])->name('login');
+Route::post('/login/proses', [AuthController::class, 'login']);
+Route::get('/logout', [AuthController::class, 'logout']);
+
+
+/*
+|--------------------------------------------------------------------------
+| Route Terproteksi (Hanya Bisa Diakses Setelah Login)
+|--------------------------------------------------------------------------
+*/
+Route::middleware([\App\Http\Middleware\CheckLogin::class])->group(function () {
+
+    // Halaman Utama & Dashboard
+    Route::get('/', function () { return view('dashboard'); });
+    Route::get('/dashboard', function () { return view('dashboard'); });
+
+    // --- Route Pemilik ---
+    Route::prefix('pemilik')->group(function () {
+        Route::get('/', [PemilikController::class, 'index']);
+        Route::get('/create', [PemilikController::class, 'create']);
+        Route::post('/store', [PemilikController::class, 'store']);
+        Route::get('/edit/{id}', [PemilikController::class, 'edit']);
+        Route::post('/update/{id}', [PemilikController::class, 'update']);
+        Route::get('/delete/{id}', [PemilikController::class, 'destroy']);
+    });
+
+    // --- Route Kendaraan ---
+    Route::prefix('kendaraan')->group(function () {
+        Route::get('/', [KendaraanController::class, 'index']);
+        Route::get('/create', [KendaraanController::class, 'create']);
+        Route::post('/store', [KendaraanController::class, 'store']);
+        Route::get('/edit/{id}', [KendaraanController::class, 'edit']);
+        Route::post('/update/{id}', [KendaraanController::class, 'update']);
+        Route::get('/delete/{id}', [KendaraanController::class, 'destroy']);
+    });
+
+    // --- Route Pembayaran ---
+    Route::prefix('pembayaran')->group(function () {
+        Route::get('/', [PembayaranController::class, 'index']);
+        Route::get('/create', [PembayaranController::class, 'create']);
+        Route::post('/store', [PembayaranController::class, 'store']);
+        Route::get('/edit/{id}', [PembayaranController::class, 'edit']);
+        Route::post('/update/{id}', [PembayaranController::class, 'update']);
+        Route::get('/delete/{id}', [PembayaranController::class, 'destroy']);
+        Route::get('/cetak/{id}', [PembayaranController::class, 'cetak']);
+        Route::get('/detail/{id}', [PembayaranController::class, 'detail']);
+    });
+
+});

@@ -1,55 +1,53 @@
 @extends('layouts.app')
 
 @section('content')
-<h2 class="fw-light text-secondary mb-3">Tambah Data Kendaraan</h2>
-<div class="card card-table-rapi">
-    <div class="card-header card-header-orange">
-        <i class="fas fa-plus me-1"></i> Form Input Kendaraan
-    </div>
-    <div class="card-body">
-        <form action="{{ url('/kendaraan/store') }}" method="POST">
-            @csrf
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">No. Rangka</label>
-                    <input type="text" name="no_rangka" class="form-control" required placeholder="Masukkan nomor rangka">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">No. Mesin</label>
-                    <input type="text" name="no_mesin" class="form-control" required placeholder="Masukkan nomor mesin">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Merk</label>
-                    <input type="text" name="merk" class="form-control" required placeholder="Contoh: Honda">
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Tipe</label>
-                    <input type="text" name="tipe" class="form-control" required placeholder="Contoh: Vario">
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Model</label>
-                    <input type="text" name="model" class="form-control" placeholder="Contoh: Sepeda Motor">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Tahun Pembuatan</label>
-                    <input type="number" name="tahun" class="form-control" placeholder="2023">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Warna</label>
-                    <input type="text" name="warna" class="form-control" placeholder="Hitam / Merah">
-                </div>
-            </div>
-
-            <hr>
-            <button type="submit" class="btn btn-primary-orange">Simpan Kendaraan</button>
-            <a href="{{ url('/kendaraan') }}" class="btn btn-secondary">Batal</a>
-        </form>
+<div class="container-fluid px-4 mt-4">
+    <h2 class="fw-light text-secondary mb-3"><i class="fas fa-car me-2 text-orange-accent"></i>Tambah Kendaraan</h2>
+    <div class="card shadow-sm border-0" style="max-width: 900px;">
+        <div class="card-header card-header-orange py-3">
+            <i class="fas fa-plus-circle me-1"></i> Form Input Unit Baru
+        </div>
+        <div class="card-body p-0">
+            <form action="{{ url('/kendaraan/store') }}" method="POST">
+                @csrf
+                <table class="table table-bordered mb-0 align-middle">
+                    <tr>
+                        <th width="30%" class="table-orange-header px-4 py-3 text-orange-accent fw-bold">No. Rangka</th>
+                        <td class="px-4 py-3"><input type="text" name="no_rangka" class="form-control" required></td>
+                    </tr>
+                    <tr>
+                        <th class="table-orange-header px-4 py-3 text-orange-accent fw-bold">Merk</th>
+                        <td class="px-4 py-3"><input type="text" name="merk" class="form-control" placeholder="Contoh: HONDA" required></td>
+                    </tr>
+                    <tr>
+                        <th class="table-orange-header px-4 py-3 text-orange-accent fw-bold">Tipe</th>
+                        <td class="px-4 py-3"><input type="text" name="tipe" class="form-control" placeholder="Contoh: SEDAN / SUV" required></td>
+                    </tr>
+                    <tr>
+                        <th class="table-orange-header px-4 py-3 text-orange-accent fw-bold">Model</th>
+                        <td class="px-4 py-3"><input type="text" name="model" class="form-control" placeholder="Contoh: CIVIC / HRV" required></td>
+                    </tr>
+                    <tr>
+                        <th class="table-orange-header px-4 py-3 text-orange-accent fw-bold">Tahun Model</th>
+                        <td class="px-4 py-3"><input type="number" name="tahun_model" class="form-control" placeholder="Contoh: 2024" required></td>
+                    </tr>
+                    <tr>
+                        <th class="table-orange-header px-4 py-3 text-orange-accent fw-bold">Warna</th>
+                        <td class="px-4 py-3"><input type="text" name="warna" class="form-control" required></td>
+                    </tr>
+                    <tr>
+                        <th class="table-orange-header px-4 py-3 text-orange-accent fw-bold">No Mesin</th>
+                        <td class="px-4 py-3"><input type="text" name="no_mesin" class="form-control" required></td>
+                    </tr>
+                    <tr class="bg-light">
+                        <td colspan="2" class="p-4 text-end">
+                            <a href="{{ url('/kendaraan') }}" class="btn btn-secondary px-4 me-2">Batal</a>
+                            <button type="submit" class="btn btn-primary-orange px-5 fw-bold">Simpan Unit</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
     </div>
 </div>
 @endsection

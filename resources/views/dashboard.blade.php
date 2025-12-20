@@ -3,115 +3,89 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="container-fluid px-4">
-    <div class="dashboard-title-container mt-4 mb-2">
-        <i class="fas fa-chart-line fa-2x text-orange-accent me-2"></i>
-        <h2 class="fw-light text-secondary mb-0">Dashboard</h2>
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <img src="{{ asset('img2.jpeg') }}" onerror="this.src='https://via.placeholder.com/50/FF9800/FFFFFF?text=V'" style="width: 50px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <div>
+            <h2 class="fw-bold text-dark m-0">Dashboard</h2>
+            <small class="text-muted text-uppercase" style="letter-spacing: 1px;">Ringkasan Sistem Prospect Motor</small>
+        </div>
     </div>
-    
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active fw-bold text-orange-accent">Ringkasan Data The Vos</li>
-    </ol>
 
-    <div class="row g-4 mb-4">
+    <div class="row g-4">
         
-        <div class="col-xl-4 col-md-6">
-            <div class="card card-metric shadow">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="small fw-normal text-muted">Total Pemilik</div>
-                        <div class="h3">
-                            {{ \App\Models\Pemilik::count() }} Data
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 border-bottom border-warning border-5 p-3 bg-white h-100">
+                <div class="card-body p-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted fw-bold">TOTAL PEMILIK</small>
+                            <h3 class="fw-bold mb-0 mt-1 text-orange-accent">10 Data</h3>
+                        </div>
+                        <div class="bg-orange-soft p-3 rounded-circle">
+                            <i class="fas fa-user-circle fa-2x text-orange-dark"></i>
                         </div>
                     </div>
-                    <i class="fas fa-users fa-3x text-orange-accent opacity-25"></i>
-                </div>
-                <div class="card-footer d-flex justify-content-between align-items-center">
-                    <a class="small text-orange-accent stretched-link fw-bold text-decoration-none" href="{{ url('/pemilik') }}">Lihat Detail</a>
-                    <div class="small text-orange-accent"><i class="fas fa-angle-right"></i></div>
+                    <hr class="my-3 opacity-50">
+                    <a href="{{ url('/pemilik') }}" class="text-decoration-none small fw-bold text-orange-accent">
+                        Lihat Semua Pemilik <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-4 col-md-6">
-            <div class="card card-metric shadow">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="small fw-normal text-muted">Total Kendaraan</div>
-                        <div class="h3">
-                            {{ \App\Models\Kendaraan::count() }} Unit
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 border-bottom border-warning border-5 p-3 bg-white h-100">
+                <div class="card-body p-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted fw-bold">TOTAL KENDARAAN</small>
+                            <h3 class="fw-bold mb-0 mt-1 text-orange-accent">25 Data</h3>
+                        </div>
+                        <div class="bg-orange-soft p-3 rounded-circle">
+                            <i class="fas fa-car fa-2x text-orange-dark"></i>
                         </div>
                     </div>
-                    <i class="fas fa-car fa-3x text-orange-accent opacity-25"></i>
-                </div>
-                <div class="card-footer d-flex justify-content-between align-items-center">
-                    <a class="small text-orange-accent stretched-link fw-bold text-decoration-none" href="{{ url('/kendaraan') }}">Lihat Detail</a>
-                    <div class="small text-orange-accent"><i class="fas fa-angle-right"></i></div>
+                    <hr class="my-3 opacity-50">
+                    <a href="{{ url('/kendaraan') }}" class="text-decoration-none small fw-bold text-orange-accent">
+                        Lihat Semua Kendaraan <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-4 col-md-6">
-            <div class="card card-metric shadow">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="small fw-normal text-muted">Total Transaksi</div>
-                        <div class="h3">
-                            {{ \App\Models\Pembayaran::count() }} Faktur
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 border-bottom border-warning border-5 p-3 bg-white h-100">
+                <div class="card-body p-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted fw-bold">PEMBAYARAN</small>
+                            <h3 class="fw-bold mb-0 mt-1 text-orange-accent">15 Data</h3>
+                        </div>
+                        <div class="bg-orange-soft p-3 rounded-circle">
+                            <i class="fas fa-file-invoice-dollar fa-2x text-orange-dark"></i>
                         </div>
                     </div>
-                    <i class="fas fa-file-invoice-dollar fa-3x text-orange-accent opacity-25"></i>
-                </div>
-                <div class="card-footer d-flex justify-content-between align-items-center">
-                    <a class="small text-orange-accent stretched-link fw-bold text-decoration-none" href="{{ url('/pembayaran') }}">Lihat Detail</a>
-                    <div class="small text-orange-accent"><i class="fas fa-angle-right"></i></div>
+                    <hr class="my-3 opacity-50">
+                    <a href="{{ url('/pembayaran') }}" class="text-decoration-none small fw-bold text-orange-accent">
+                        Lihat Laporan Keuangan <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <div class="card border-0 shadow-sm bg-orange-soft p-4">
-        <div class="d-flex align-items-center">
-            <div class="me-4">
-                <i class="fas fa-hand-sparkles fa-3x text-orange-accent"></i>
-            </div>
-            <div>
-                <h4 class="text-orange-accent fw-bold">Selamat Datang, Admin The Vos!</h4>
-                <p class="mb-0 text-muted">Gunakan menu di sebelah kiri untuk mengelola data pemilik, armada kendaraan, dan memantau status pembayaran faktur secara real-time.</p>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="alert bg-white border-0 shadow-sm d-flex align-items-center">
+                <div class="bg-orange-accent text-white rounded-2 p-2 me-3">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div>
+                    <span class="fw-bold text-dark">Informasi Sistem:</span> 
+                    Sistem ini digunakan untuk memantau data operasional Prospect Motor secara real-time.
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<style>
-    /* Tambahan Style khusus Dashboard agar identik dengan permintaan */
-    .card-metric {
-        background-color: #ffffff !important;
-        border: none;
-        border-bottom: 5px solid #e65100 !important; 
-        border-radius: 8px;
-        transition: transform 0.3s;
-    }
-
-    .card-metric:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15) !important;
-    }
-
-    .card-metric .h3 {
-        color: #e65100; 
-        font-weight: 800;
-        margin-top: 5px;
-    }
-
-    .bg-orange-soft {
-        background-color: #fce4cc !important;
-    }
-
-    .dashboard-title-container {
-        display: flex;
-        align-items: center;
-    }
-</style>
 @endsection

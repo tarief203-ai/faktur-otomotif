@@ -38,7 +38,7 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Tahun</label>
-                    <input type="number" name="tahun" class="form-control" value="{{ $k->tahun }}">
+                    <input type="number" name="tahun_model" class="form-control" value="{{ $k->tahun_model }}">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Warna</label>

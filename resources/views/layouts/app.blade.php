@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') - The Vos</title>
+    <title>@yield('title') - Prospect Motor</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
@@ -15,111 +15,134 @@
             --orange-dark: #FF6F00;
             --orange-accent: #e65100;
             --white-clean: #ffffff;
-            --orange-soft: #fce4cc; /* Warna header tabel index */
+            --orange-soft: #fce4cc;
+            --sidebar-width: 260px;
         }
 
         body {
-            display: flex;
             min-height: 100vh;
-            overflow-x: hidden;
             background-color: #f8f9fa;
+            margin: 0;
+            display: flex;
+            overflow-x: hidden;
         }
 
         /* Sidebar Styling */
         #sidebar-wrapper {
-            min-width: 250px;
-            max-width: 250px;
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
             background-color: var(--orange-dark);
             color: white;
-            transition: all 0.3s;
+            z-index: 1001;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            transition: margin 0.25s ease-out;
         }
 
         .sidebar-heading {
-            padding: 1.5rem;
-            font-size: 1.5rem;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
             font-weight: bold;
-            text-align: center;
             background-color: var(--orange-accent);
-            letter-spacing: 2px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .list-group-item {
             background-color: transparent;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.85);
             border: none;
             padding: 1rem 1.5rem;
             border-left: 4px solid transparent;
+            transition: 0.2s;
         }
 
         .list-group-item:hover {
             background-color: rgba(255, 255, 255, 0.1);
             color: white;
-            border-left: 4px solid white;
+            border-left: 4px solid var(--orange-soft);
         }
 
         .list-group-item.active {
-            background-color: rgba(0, 0, 0, 0.1);
-            color: white;
-            border-left: 4px solid white;
+            background-color: rgba(0, 0, 0, 0.15) !important;
+            color: white !important;
+            border-left: 4px solid white !important;
             font-weight: bold;
         }
 
-        /* Content Styling */
+        /* Content Wrapper */
         #page-content-wrapper {
-            width: 100%;
-            padding: 20px;
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            transition: margin 0.25s ease-out;
         }
 
-        /* CSS Global Untuk Tabel dan Form */
-        .card-header-orange {
+        /* Navbar Orange */
+        .navbar-custom {
+            height: 60px;
             background-color: var(--orange-light) !important;
-            color: white;
-            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        .btn-primary-orange {
-            background-color: var(--orange-accent) !important;
-            border-color: var(--orange-accent) !important;
-            color: white;
+        /* Efek Toggle Sidebar (Diberikan ke body via JS) */
+        body.sb-toggled #sidebar-wrapper {
+            margin-left: calc(-1 * var(--sidebar-width));
         }
+        body.sb-toggled #page-content-wrapper {
+            margin-left: 0;
+        }
+
+        .main-content { padding: 30px; }
+        .text-orange-accent { color: var(--orange-accent) !important; }
         
-        .btn-primary-orange:hover {
-            background-color: var(--orange-dark) !important;
+        .btn-toggle {
             color: white;
+            border: none;
+            background: transparent;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            cursor: pointer;
         }
 
-        /* Styling Header Tabel di Index */
-        .table-orange-header th {
-            background-color: var(--orange-soft) !important;
-            color: var(--orange-dark);
-            padding: 15px !important;
+        .btn-orange-pill { 
+            background: white; 
+            color: var(--orange-accent); 
+            font-weight: bold; 
+            border-radius: 50px; 
+            padding: 5px 20px;
+            border: none;
+            transition: 0.3s;
         }
-
-        /* STYLING KHUSUS FORM VERTIKAL (TAMBAH/UBAH) */
-        .table-form th {
-            background-color: var(--orange-soft) !important;
-            color: var(--orange-accent);
-            width: 30%;
-            padding: 18px 20px !important;
-            border-right: 1px solid #dee2e6 !important;
-        }
-
-        .table-form td {
-            padding: 15px 20px !important;
-        }
-
-        .text-orange-accent {
-            color: var(--orange-accent) !important;
-        }
+        .btn-orange-pill:hover { background: var(--orange-soft); color: var(--orange-dark); }
     </style>
 </head>
 <body>
 
     <div id="sidebar-wrapper">
-        <div class="sidebar-heading border-bottom">THE VOS</div>
+        <div class="sidebar-heading">
+            <i class="fas fa-car-side me-2"></i>Prospect Motor
+        </div>
         <div class="list-group list-group-flush mt-3">
-            <small class="px-4 text-white-50 text-uppercase" style="font-size: 0.7rem;">Menu Utama</small>
+            <small class="px-4 text-white-50 text-uppercase mb-2" style="font-size: 0.65rem; font-weight: 700;">Menu Utama</small>
             
+            <a href="{{ url('/dashboard') }}" class="list-group-item list-group-item-action {{ Request::is('dashboard') ? 'active' : '' }}">
+                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+            </a>
+
             <a href="{{ url('/pemilik') }}" class="list-group-item list-group-item-action {{ Request::is('pemilik*') ? 'active' : '' }}">
                 <i class="fas fa-user-circle me-2"></i> Data Pemilik
             </a>
@@ -135,7 +158,25 @@
     </div>
 
     <div id="page-content-wrapper">
-        <div class="container-fluid">
+        
+        <nav class="navbar navbar-dark navbar-custom">
+            <div class="container-fluid p-0">
+                <div class="d-flex align-items-center">
+                    <button class="btn-toggle" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <span class="text-white fw-bold d-none d-md-inline ms-2">SISTEM INFORMASI PROSPECT MOTOR</span>
+                </div>
+                
+                <div class="ms-auto">
+                    <a href="{{ url('/logout') }}" class="btn btn-orange-pill shadow-sm" onclick="return confirm('Apakah Anda ingin keluar?')">
+                        Keluar <i class="fas fa-sign-out-alt ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="main-content">
             @yield('content')
         </div>
     </div>
@@ -144,11 +185,21 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    
     <script>
         $(document).ready(function () {
-            $('.datatable-init').DataTable({
-                "language": { "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/id.json" }
+            // Script untuk Toggle Sidebar
+            $("#sidebarToggle").click(function(e) {
+                e.preventDefault();
+                $("body").toggleClass("sb-toggled");
             });
+
+            // DataTable Init
+            if ($('.datatable-init').length > 0) {
+                $('.datatable-init').DataTable({
+                    "language": { "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/id.json" }
+                });
+            }
         });
     </script>
 </body>

@@ -7,92 +7,103 @@ use Illuminate\Support\Facades\DB;
 
 class PembayaranController extends Controller
 {
-    public function index()
+    public function index() 
     {
-        $pembayarans = DB::table('pembayaran as pe')
-            ->join('pemilik as p', 'pe.id_pemilik', '=', 'p.id_pemilik')
-            ->join('kendaraan as k', 'pe.no_rangka', '=', 'k.no_rangka')
-            ->select('p.id_pemilik', 'p.nama', 'k.no_rangka', 'pe.no_faktur', 'k.merk', 'pe.jumlah_unit', 'pe.harga')
+        // Join tabel untuk mendapatkan Nama Pemilik dan Merk Kendaraan
+        $pembayarans = DB::table('pembayaran')
+            ->join('pemilik', 'pembayaran.id_pemilik', '=', 'pemilik.id_pemilik')
+            ->join('kendaraan', 'pembayaran.no_rangka', '=', 'kendaraan.no_rangka')
+            ->select(
+                'pembayaran.*', 
+                'pemilik.nama', 
+                'kendaraan.merk'
+            )
             ->get();
 
         return view('pembayaran.index', compact('pembayarans'));
     }
 
-    // --- TAMBAHKAN FUNGSI INI ---
-    public function create()
+    public function create() 
     {
-        // Ambil data untuk isi dropdown di form tambah
         $pemiliks = DB::table('pemilik')->get();
         $kendaraans = DB::table('kendaraan')->get();
         
         return view('pembayaran.create', compact('pemiliks', 'kendaraans'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request) 
     {
+        $request->validate([
+            'no_faktur' => 'required',
+            'no_rangka' => 'required',
+            'id_pemilik' => 'required',
+            'harga' => 'required|numeric'
+        ]);
+
         DB::table('pembayaran')->insert([
-            'no_faktur'   => $request->no_faktur,
-            'id_pemilik'  => $request->id_pemilik,
-            'no_rangka'   => $request->no_rangka,
-            'jumlah_unit' => $request->jumlah_unit,
-            'harga'       => $request->harga,
+            'no_faktur'      => $request->no_faktur,
+            'no_pupd'        => $request->no_pupd,
+            'tgl_pupd'       => $request->tgl_pupd,
+            'harga'          => $request->harga,
+            'terbilang'      => $request->terbilang,
+            'tgl_pembayaran' => $request->tgl_pembayaran,
+            'jumlah_unit'    => $request->jumlah_unit,
+            'id_pemilik'     => $request->id_pemilik,
+            'no_rangka'      => $request->no_rangka,
         ]);
 
         return redirect('/pembayaran')->with('success', 'Pembayaran berhasil disimpan!');
     }
-    // ----------------------------
 
-    public function destroy($id)
+    // --- FUNGSI EDIT (MENAMPILKAN FORM) ---
+    public function edit($id)
+    {
+        // Ambil data pembayaran berdasarkan no_faktur
+        $data = DB::table('pembayaran')->where('no_faktur', $id)->first();
+        
+        // Ambil data dropdown
+        $pemiliks = DB::table('pemilik')->get();
+        $kendaraans = DB::table('kendaraan')->get();
+
+        if (!$data) {
+            return redirect('/pembayaran')->with('error', 'Data tidak ditemukan!');
+        }
+
+        return view('pembayaran.edit', compact('data', 'pemiliks', 'kendaraans'));
+    }
+
+    // --- FUNGSI UPDATE (SIMPAN PERUBAHAN) ---
+    public function update(Request $request, $id)
+    {
+        DB::table('pembayaran')->where('no_faktur', $id)->update([
+            'no_pupd'        => $request->no_pupd,
+            'tgl_pupd'       => $request->tgl_pupd,
+            'harga'          => $request->harga,
+            'terbilang'      => $request->terbilang,
+            'tgl_pembayaran' => $request->tgl_pembayaran,
+            'jumlah_unit'    => $request->jumlah_unit,
+            'id_pemilik'     => $request->id_pemilik,
+            'no_rangka'      => $request->no_rangka,
+        ]);
+
+        return redirect('/pembayaran')->with('success', 'Data pembayaran berhasil diperbarui!');
+    }
+
+    public function delete($id) 
     {
         DB::table('pembayaran')->where('no_faktur', $id)->delete();
-        return redirect('/pembayaran')->with('success', 'Data berhasil dihapus');
-    }
-    public function cetak($id)
-{
-    $data = DB::table('pembayaran as p')
-        ->join('kendaraan as k', 'p.no_rangka', '=', 'k.no_rangka')
-        ->join('pemilik as pem', 'p.id_pemilik', '=', 'pem.id_pemilik')
-        ->where('p.no_faktur', $id)
-        ->first();
-
-    if (!$data) {
-        return redirect()->back()->with('error', 'Data tidak ditemukan');
+        return redirect('/pembayaran')->with('success', 'Data pembayaran berhasil dihapus!');
     }
 
-    return view('pembayaran.cetak', compact('data'));
-}
-public function detail($id)
-{
-    $data = DB::table('pembayaran')->where('no_faktur', $id)->first();
+    public function detail($id)
+    {
+        $data = DB::table('pembayaran')
+            ->join('pemilik', 'pembayaran.id_pemilik', '=', 'pemilik.id_pemilik')
+            ->join('kendaraan', 'pembayaran.no_rangka', '=', 'kendaraan.no_rangka')
+            ->select('pembayaran.*', 'pemilik.nama', 'kendaraan.merk', 'kendaraan.model', 'kendaraan.warna')
+            ->where('pembayaran.no_faktur', $id)
+            ->first();
 
-    if (!$data) {
-        return redirect('/pembayaran')->with('error', 'Data tidak ditemukan');
+        return view('pembayaran.detail', compact('data'));
     }
-
-    return view('pembayaran.detail', compact('data'));
-}
-public function edit($id)
-{
-    // Ambil data pembayaran yang mau diedit
-    $data = DB::table('pembayaran')->where('no_faktur', $id)->first();
-    
-    // Ambil data untuk pilihan dropdown
-    $pemiliks = DB::table('pemilik')->get();
-    $kendaraans = DB::table('kendaraan')->get();
-
-    return view('pembayaran.edit', compact('data', 'pemiliks', 'kendaraans'));
-}
-
-public function update(Request $request, $id)
-{
-    DB::table('pembayaran')->where('no_faktur', $id)->update([
-        'id_pemilik'  => $request->id_pemilik,
-        'no_rangka'   => $request->no_rangka,
-        'jumlah_unit' => $request->jumlah_unit,
-        'harga'       => $request->harga,
-        // Tambahkan kolom lain jika ada seperti no_pupd, terbilang, dll
-    ]);
-
-    return redirect('/pembayaran')->with('success', 'Data Pembayaran berhasil diperbarui!');
-}
 }
