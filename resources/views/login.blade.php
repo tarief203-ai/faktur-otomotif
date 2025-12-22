@@ -49,7 +49,7 @@
 
 <div class="card login-card">
     <div class="login-header">
-        <h3 class="mb-0 fw-bold">THE VOS</h3>
+        <h3 class="mb-0 fw-bold">Prospect Motor</h3>
         <small>Silakan masuk ke akun Anda</small>
     </div>
     <div class="card-body p-4">
