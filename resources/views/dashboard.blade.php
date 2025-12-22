@@ -14,12 +14,16 @@
         <img src="{{ asset('img2.jpeg') }}" onerror="this.src='https://via.placeholder.com/50/FF9800/FFFFFF?text=V'" style="width: 50px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
         <div>
             <h2 class="fw-bold text-dark m-0">Dashboard</h2>
-            <small class="text-muted text-uppercase" style="letter-spacing: 1px;">Ringkasan Sistem Prospect Motor</small>
+            <small class="text-muted text-uppercase" style="letter-spacing: 1px;">
+                {{ auth()->user()->role == 'admin' ? 'Ringkasan Sistem Prospect Motor' : 'Panel Kerja Staff' }}
+            </small>
         </div>
     </div>
 
     <div class="row g-4">
         
+        {{-- HANYA MUNCUL UNTUK ADMIN --}}
+        @if(auth()->user()->role == 'admin')
         <div class="col-md-4">
             <div class="card shadow-sm border-0 border-bottom border-warning border-5 p-3 bg-white h-100">
                 <div class="card-body p-0">
@@ -59,14 +63,19 @@
                 </div>
             </div>
         </div>
+        @endif
 
-        <div class="col-md-4">
+        {{-- MUNCUL UNTUK SEMUA (ADMIN & STAFF) --}}
+        <div class="{{ auth()->user()->role == 'admin' ? 'col-md-4' : 'col-md-12' }}">
             <div class="card shadow-sm border-0 border-bottom border-warning border-5 p-3 bg-white h-100">
                 <div class="card-body p-0">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <small class="text-muted fw-bold">PEMBAYARAN</small>
-                            <h3 class="fw-bold mb-0 mt-1 text-orange-accent">{{ $total_pembayaran }} Data</h3>
+                            <h3 class="fw-bold mb-0 mt-1 text-orange-accent">
+                                {{ $total_pembayaran }} Data 
+                                <small class="fs-6 text-muted fw-normal">{{ auth()->user()->role == 'staff' ? '(Milik Saya)' : '' }}</small>
+                            </h3>
                         </div>
                         <div class="bg-orange-soft p-3 rounded-circle">
                             <i class="fas fa-file-invoice-dollar fa-2x text-orange-dark"></i>
@@ -90,7 +99,9 @@
                 </div>
                 <div>
                     <span class="fw-bold text-dark">Informasi Sistem:</span> 
-                    Sistem ini digunakan untuk memantau data operasional Prospect Motor secara real-time. 
+                    {{ auth()->user()->role == 'admin' 
+                        ? 'Sistem ini digunakan untuk memantau data operasional Prospect Motor secara real-time.' 
+                        : 'Anda masuk sebagai Staff. Anda hanya dapat melihat dan mencetak data pembayaran yang Anda kelola.' }}
                     Ditemukan total <strong>{{ $total_pembayaran }}</strong> transaksi yang tercatat.
                 </div>
             </div>
