@@ -34,18 +34,18 @@ public function store(Request $request) {
     }
 
     public function update(Request $request, $id) {
-        // Kolom di database adalah 'tahun_model'
-        DB::table('kendaraan')->where('no_rangka', $id)->update([
-            'merk'        => $request->merk,
-            'tipe'        => $request->tipe,
-            'model'       => $request->model,
-            'tahun_model' => $request->tahun, // Mengambil dari input 'tahun' ke kolom 'tahun_model'
-            'warna'       => $request->warna,
-            'no_mesin'    => $request->no_mesin,
-        ]);
-        
-        return redirect('/kendaraan')->with('success', 'Data Kendaraan berhasil diupdate!');
-    }
+    // Pastikan menggunakan $request->tahun_model sesuai dengan name="tahun_model" di blade
+    DB::table('kendaraan')->where('no_rangka', $id)->update([
+        'merk'        => $request->merk,
+        'tipe'        => $request->tipe,
+        'model'       => $request->model,
+        'tahun_model' => $request->tahun_model, // SEBELUMNYA: $request->tahun
+        'warna'       => $request->warna,
+        'no_mesin'    => $request->no_mesin,
+    ]);
+    
+    return redirect('/kendaraan')->with('success', 'Data Kendaraan berhasil diupdate!');
+}
 
     public function destroy($id) {
         DB::table('kendaraan')->where('no_rangka', $id)->delete();
