@@ -36,28 +36,51 @@ class PembayaranController extends Controller
     }
 
     public function store(Request $request)
-    {
-        if (auth()->user()->role !== 'admin') {
-            return redirect('/pembayaran')->with('error', 'Aksi tidak diizinkan!');
-        }
-
-        DB::table('pembayaran')->insert([
-            'no_faktur'      => $request->no_faktur,
-            'no_pupd'        => $request->no_pupd,
-            'tgl_pupd'       => $request->tgl_pupd,
-            'harga'          => $request->harga,
-            'terbilang'      => $request->terbilang,
-            'tgl_pembayaran' => $request->tgl_pembayaran,
-            'jumlah_unit'    => $request->jumlah_unit,
-            'id_pemilik'     => $request->id_pemilik,
-            'no_rangka'      => $request->no_rangka,
-            'user_id'        => auth()->id(),
-            'created_at'     => now(),
-            'updated_at'     => now(),
-        ]);
-
-        return redirect('/pembayaran')->with('success', 'Data pembayaran berhasil ditambahkan!');
+{
+    if (auth()->user()->role !== 'admin') {
+        return redirect('/pembayaran')->with('error', 'Aksi tidak diizinkan!');
     }
+
+    // 1. Validasi: Cek apakah Pemilik sudah pernah membayar
+    $cekPemilik = DB::table('pembayaran')
+        ->where('id_pemilik', $request->id_pemilik)
+        ->exists();
+
+    if ($cekPemilik) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Gagal! Pemilik ini sudah memiliki riwayat transaksi pembayaran.');
+    }
+
+    // 2. Validasi: Cek apakah Kendaraan sudah pernah dibayar
+    $cekKendaraan = DB::table('pembayaran')
+        ->where('no_rangka', $request->no_rangka)
+        ->exists();
+
+    if ($cekKendaraan) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Gagal! Kendaraan ini sudah memiliki riwayat transaksi pembayaran.');
+    }
+
+    // Jika lolos validasi, simpan data
+    DB::table('pembayaran')->insert([
+        'no_faktur'      => $request->no_faktur,
+        'no_pupd'        => $request->no_pupd,
+        'tgl_pupd'       => $request->tgl_pupd,
+        'harga'          => $request->harga,
+        'terbilang'      => $request->terbilang,
+        'tgl_pembayaran' => $request->tgl_pembayaran,
+        'jumlah_unit'    => $request->jumlah_unit,
+        'id_pemilik'     => $request->id_pemilik,
+        'no_rangka'      => $request->no_rangka,
+        'user_id'        => auth()->id(),
+        'created_at'     => now(),
+        'updated_at'     => now(),
+    ]);
+
+    return redirect('/pembayaran')->with('success', 'Data pembayaran berhasil ditambahkan!');
+}
 
     public function edit($id)
     {
