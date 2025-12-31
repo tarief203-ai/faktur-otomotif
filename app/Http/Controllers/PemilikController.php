@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller; 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // Penting untuk query database
+use Illuminate\Support\Facades\DB;
 
-class PemilikController extends Controller
+class PemilikController extends Controller 
 {
-    // Fungsi ini yang tadi dianggap tidak ada (undefined)
+    // REVISI: Bagian __construct dihapus karena proteksi sudah ada di web.php
+
     public function index()
     {
-        // Mengambil semua data dari tabel pemilik
         $pemiliks = DB::table('pemilik')->get();
-        
-        // Mengirim data ke view pemilik/index.blade.php
         return view('pemilik.index', compact('pemiliks'));
     }
 
@@ -30,7 +29,7 @@ class PemilikController extends Controller
             'alamat' => $request->alamat,
             'kode_pos' => $request->kode_pos
         ]);
-        return redirect('/pemilik');
+        return redirect('/pemilik')->with('success', 'Data Pemilik berhasil ditambah!');
     }
 
     public function edit($id)
@@ -46,20 +45,18 @@ class PemilikController extends Controller
             'alamat' => $request->alamat,
             'kode_pos' => $request->kode_pos
         ]);
-        return redirect('/pemilik');
+        return redirect('/pemilik')->with('success', 'Data Pemilik berhasil diupdate!');
     }
 
-  public function destroy($id) {
-    // GIVEN: Pemilik memiliki data di tabel pembayaran
-    $adaPembayaran = DB::table('pembayaran')->where('id_pemilik', $id)->exists();
+    public function destroy($id) 
+    {
+        $adaPembayaran = DB::table('pembayaran')->where('id_pemilik', $id)->exists();
 
-    if ($adaPembayaran) {
-        // MAKA: Sistem harus error (tidak boleh dihapus)
-        return redirect('/pemilik')->with('error', 'Data Pemilik gagal dihapus karena sudah memiliki transaksi pembayaran!');
+        if ($adaPembayaran) {
+            return redirect('/pemilik')->with('error', 'Data Pemilik gagal dihapus karena sudah memiliki transaksi pembayaran!');
+        }
+
+        DB::table('pemilik')->where('id_pemilik', $id)->delete();
+        return redirect('/pemilik')->with('success', 'Data Pemilik berhasil dihapus!');
     }
-
-    // ELSE: Jika tidak ada relasi, barulah hapus
-    DB::table('pemilik')->where('id_pemilik', $id)->delete();
-    return redirect('/pemilik')->with('success', 'Data Pemilik berhasil dihapus!');
-}
 }

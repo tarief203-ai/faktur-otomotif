@@ -141,6 +141,7 @@
                 <i class="fas fa-tachometer-alt me-2"></i> Dashboard
             </a>
 
+            {{-- HANYA ADMIN yang bisa melihat menu Data Pemilik dan Data Kendaraan --}}
             @if(auth()->check() && auth()->user()->role == 'admin')
                 <a href="{{ url('/pemilik') }}" class="list-group-item list-group-item-action {{ Request::is('pemilik*') ? 'active' : '' }}">
                     <i class="fas fa-user-circle me-2"></i> Data Pemilik
@@ -151,6 +152,7 @@
                 </a>
             @endif
 
+            {{-- Admin dan Staff bisa melihat menu Pembayaran --}}
             <a href="{{ url('/pembayaran') }}" class="list-group-item list-group-item-action {{ Request::is('pembayaran*') ? 'active' : '' }}">
                 <i class="fas fa-file-invoice-dollar me-2"></i> Pembayaran
             </a>
