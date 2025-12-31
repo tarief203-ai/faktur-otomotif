@@ -49,9 +49,17 @@ class PemilikController extends Controller
         return redirect('/pemilik');
     }
 
-    public function destroy($id)
-    {
-        DB::table('pemilik')->where('id_pemilik', $id)->delete();
-        return redirect('/pemilik');
+  public function destroy($id) {
+    // GIVEN: Pemilik memiliki data di tabel pembayaran
+    $adaPembayaran = DB::table('pembayaran')->where('id_pemilik', $id)->exists();
+
+    if ($adaPembayaran) {
+        // MAKA: Sistem harus error (tidak boleh dihapus)
+        return redirect('/pemilik')->with('error', 'Data Pemilik gagal dihapus karena sudah memiliki transaksi pembayaran!');
     }
+
+    // ELSE: Jika tidak ada relasi, barulah hapus
+    DB::table('pemilik')->where('id_pemilik', $id)->delete();
+    return redirect('/pemilik')->with('success', 'Data Pemilik berhasil dihapus!');
+}
 }

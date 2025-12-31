@@ -47,8 +47,16 @@ public function store(Request $request) {
     return redirect('/kendaraan')->with('success', 'Data Kendaraan berhasil diupdate!');
 }
 
-    public function destroy($id) {
-        DB::table('kendaraan')->where('no_rangka', $id)->delete();
-        return redirect('/kendaraan')->with('success', 'Data Kendaraan berhasil dihapus!');
+   public function destroy($id) {
+    // GIVEN: Kendaraan (no_rangka) sudah tercatat di tabel pembayaran
+    $adaFaktur = DB::table('pembayaran')->where('no_rangka', $id)->exists();
+
+    if ($adaFaktur) {
+        // MAKA: Sistem harus error (tidak boleh dihapus)
+        return redirect('/kendaraan')->with('error', 'Data Kendaraan gagal dihapus karena sudah terdaftar di Faktur Pembayaran!');
     }
+
+    DB::table('kendaraan')->where('no_rangka', $id)->delete();
+    return redirect('/kendaraan')->with('success', 'Data Kendaraan berhasil dihapus!');
+}
 }
