@@ -2,7 +2,23 @@
 
 @section('content')
 <div class="container-fluid px-4 mt-4">
-    <h2 class="text-secondary mb-4">Data Kendaraan</h2> <div class="card shadow-sm border-0">
+    <h2 class="text-secondary mb-4">Data Kendaraan</h2> 
+
+    {{-- ALERT NOTIFIKASI --}}
+    @if(session('success'))
+        <div class="alert alert-success border-0 shadow-sm fw-bold">
+            <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger border-0 shadow-sm fw-bold">
+            <i class="fas fa-exclamation-triangle me-2"></i> {{ session('error') }}
+        </div>
+    @endif
+    {{-- END ALERT --}}
+
+    <div class="card shadow-sm border-0">
         <div class="card-header bg-orange-dark text-white py-3">
             <i class="fas fa-car me-1"></i> Tabel Kendaraan
         </div>
@@ -25,7 +41,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($kendaraans as $data) <tr>
+                        @foreach($kendaraans as $data) 
+                        <tr>
                             <td class="text-center fw-bold">{{ $data->no_rangka }}</td>
                             <td class="text-center">{{ $data->no_mesin }}</td>
                             <td>{{ $data->merk }}</td>
@@ -34,10 +51,10 @@
                             <td class="text-center">{{ $data->tahun_model }}</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-1">
-                                    <a href="{{ url('/kendaraan/edit/'.$data->no_rangka) }}" class="btn btn-sm btn-warning text-white">
+                                    <a href="{{ url('/kendaraan/edit/'.$data->no_rangka) }}" class="btn btn-sm btn-warning text-white" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="{{ url('/kendaraan/delete/'.$data->no_rangka) }}" class="btn btn-sm btn-danger" onclick="return confirm('Hapus kendaraan ini?')">
+                                    <a href="{{ url('/kendaraan/delete/'.$data->no_rangka) }}" class="btn btn-sm btn-danger" onclick="return confirm('Hapus kendaraan ini?')" title="Hapus">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </div>
@@ -56,6 +73,12 @@
     .bg-orange-soft { background-color: #fef4ea !important; }
     .text-orange-accent { color: #e65100 !important; }
     .btn-primary-orange { background-color: #FF6F00; border: none; }
-    .btn-primary-orange:hover { background-color: #e65100; }
+    .btn-primary-orange:hover { background-color: #e65100; transition: 0.3s; }
+    
+    /* Membuat header tabel tetap rapi */
+    .table thead th {
+        vertical-align: middle;
+        border-bottom: 2px solid #FF6F00 !important;
+    }
 </style>
 @endsection
